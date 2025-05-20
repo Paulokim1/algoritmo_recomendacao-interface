@@ -84,7 +84,7 @@ def render_sidebar():
         if st.sidebar.button("Iniciar outra sessão"):
             with st.spinner(""):
                 renew_session()
-                st.experimental_rerun()
+                st.rerun()
 
 # Display chat history
 def render_chat_history():
