@@ -68,7 +68,7 @@ def renew_session():
 
 # Sidebar: login or new-session button
 def render_sidebar():
-    st.sidebar.header("🔒 Sessão")
+    st.sidebar.header("⚙️ Sessão")
     if not st.session_state.session_started:
         with st.sidebar.form("login_form", clear_on_submit=False):
             st.session_state.chat_api_key = st.text_input(
@@ -167,8 +167,6 @@ def process_selection():
                 st.write(f"Não há médicos que realizem este procedimento")
         else:
             render_medic_list()
-
-        
 
 # Regular chat input
 def chat_input_area():
