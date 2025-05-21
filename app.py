@@ -37,9 +37,14 @@ def call_api(message: list):
 
 # Start a new session (initial or subsequent)
 def start_session():
+    # Reset all defaults
     st.session_state.session_id = str(uuid.uuid4())
     st.session_state.messages.clear()
+
+    # Call API to start session
     data = call_api(["START_SESSION"])
+
+    # Set session state
     st.session_state.session_started = True
     st.session_state.session_state = data.get("session_state")
     st.session_state.output = data.get("output", {})
@@ -49,12 +54,15 @@ def renew_session():
     # Preserve credentials
     api_key = st.session_state.chat_api_key
     id_pessoa = st.session_state.id_pessoa
+
     # Reset all defaults
     for key, val in defaults.items():
         st.session_state[key] = val
+    
     # Restore credentials
     st.session_state.chat_api_key = api_key
     st.session_state.id_pessoa = id_pessoa
+    
     # Start fresh session
     start_session()
 
@@ -104,10 +112,24 @@ def render_options():
         for exam in st.session_state.output:
             cod = exam["cod_prod_med"]
             with st.container(border=True):
-                st.markdown(f"**{exam['dsc_prod_med']}**")
-                st.markdown(f"Data de Emissão: {exam['dat_emissao']}")
-                if st.button("Selecionar", key=f"exam_{cod}"):
-                    st.session_state.selected_exam = cod
+                st.markdown(
+                    f"<u><strong>{exam['dsc_prod_med']}</strong></u>",
+                    unsafe_allow_html=True
+                )
+
+                col_left, col_right = st.columns(2)
+                with col_left:
+                    st.markdown(f"* ID Solicitação: {exam['id_solicitacao']}")
+                    st.markdown(f"* Código do Exame: {exam['cod_prod_med']}")
+                    st.markdown(f"* Grupo: {exam['dsc_grupo_proced']}")
+                with col_right:
+                    st.markdown(f"* Especialidade: {exam['dsc_especialidade_principal']}")
+                    st.markdown(f"* Data de Emissão: {exam['dat_emissao']}")
+
+                btn_spacer, btn_col = st.columns([5, 1])
+                with btn_col:
+                    if st.button("Selecionar", key=f"exam_{cod}"):
+                        st.session_state.selected_exam = cod
 
 # Process selected_case
 def process_selection():
