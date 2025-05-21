@@ -88,7 +88,10 @@ def render_sidebar():
     else:
         st.sidebar.markdown(f"**ID da Pessoa:** {st.session_state.id_pessoa}")
         st.sidebar.markdown(f"**Session ID:** {st.session_state.session_id}")
+
+        st.sidebar.markdown("🆕 Caso queira iniciar uma sessão nova com outro `id_pessoa`, atualize a página. (F12)")
         
+        st.sidebar.markdown("🔄 Caso queira iniciar uma nova sessão com o mesmo `id_pessoa`, clique no botão abaixo.👇🏻")
         if st.sidebar.button("Iniciar outra sessão"):
             with st.spinner(""):
                 renew_session()
@@ -153,20 +156,20 @@ def process_selection():
         st.session_state.messages.append({"role": "assistant", "content": reply})
 
     if st.session_state.session_state == 2:
-        if not st.session_state.output:
-            st.write("⚠️ Atenção!")
-            with st.container(border=True):
-                st.write(f"Paciente não possui exames registardos no sistema")
-        else:
-            render_options()
+        render_options()
 
-    if st.session_state.session_state == 3:
+    if st.session_state.session_state == 3 and st.session_state.output:
         if not st.session_state.output:
             st.write("⚠️ Atenção!")
             with st.container(border=True):
                 st.write(f"Não há médicos que realizem este procedimento")
         else:
             render_medic_list()
+
+    if st.session_state.session_state == 3 and not st.session_state.output:
+        st.write("⚠️ Atenção!")
+        with st.container(border=True):
+            st.write(f"Paciente não possui exames registardos no sistema")
 
 # Regular chat input
 def chat_input_area():
